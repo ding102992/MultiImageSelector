@@ -105,6 +105,8 @@ class CustomerActivity extends Activity implements MultiImageSelectorFragment.Ca
 -------------------
 
 ###更新日志
+* 2015-9-29
+    1. 新增. 预览功能(支持相册预览和选中预览).
 
 * 2015-5-5
     1. 修复. 某些图片无法显示. (Issue by[sd6352051](https://github.com/sd6352051), [larry](https://github.com/18611480882))
