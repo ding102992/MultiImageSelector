@@ -5,6 +5,7 @@
 
 
     <include
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         layout="@layout/cmp_customer_actionbar" />

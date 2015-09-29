@@ -1,7 +1,6 @@
 package me.nereo.multi_image_selector.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -39,6 +37,12 @@ public class ImageGridAdapter extends BaseAdapter {
 
     private int mItemSize;
     private GridView.LayoutParams mItemLayoutParams;
+
+    private OnImageGridViewClickListener mOnImageGridViewClickListener;
+
+    public void setOnImageGridViewClickListener(OnImageGridViewClickListener listener){
+        mOnImageGridViewClickListener = listener;
+    }
 
     public ImageGridAdapter(Context context, boolean showCamera){
         mContext = context;
@@ -121,6 +125,14 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     /**
+     * 获取数据集
+     */
+
+    public List<Image> getData(){
+       return mImages;
+    }
+
+    /**
      * 重置每个Column的Size
      * @param columnWidth
      */
@@ -179,6 +191,13 @@ public class ImageGridAdapter extends BaseAdapter {
         if(type == TYPE_CAMERA){
             view = mInflater.inflate(R.layout.list_item_camera, viewGroup, false);
             view.setTag(null);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(null != mOnImageGridViewClickListener) mOnImageGridViewClickListener.onItemCameraClick();
+                }
+            });
+
         }else if(type == TYPE_NORMAL){
             ViewHolde holde;
             if(view == null){
@@ -192,7 +211,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 }
             }
             if(holde != null) {
-                holde.bindData(getItem(i));
+                holde.bindData(getItem(i),i);
             }
         }
 
@@ -217,7 +236,7 @@ public class ImageGridAdapter extends BaseAdapter {
             view.setTag(this);
         }
 
-        void bindData(final Image data){
+        void bindData(final Image data,final int index){
             if(data == null) return;
             // 处理单选和多选状态
             if(showSelectIndicator){
@@ -231,6 +250,12 @@ public class ImageGridAdapter extends BaseAdapter {
                     indicator.setImageResource(R.drawable.btn_unselected);
                     mask.setVisibility(View.GONE);
                 }
+                indicator.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(null != mOnImageGridViewClickListener) mOnImageGridViewClickListener.onItemCheckBoxClick(data,index);
+                    }
+                });
             }else{
                 indicator.setVisibility(View.GONE);
             }
@@ -245,8 +270,23 @@ public class ImageGridAdapter extends BaseAdapter {
                         .resize(mItemSize, mItemSize)
                         .centerCrop()
                         .into(image);
+                image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != mOnImageGridViewClickListener) mOnImageGridViewClickListener.onItemImageClick(data,index);
+                    }
+                });
             }
         }
+    }
+
+
+    public interface OnImageGridViewClickListener{
+        void onItemCheckBoxClick(Image image,int index);
+
+        void onItemImageClick(Image image,int index);
+
+        void onItemCameraClick();
     }
 
 }

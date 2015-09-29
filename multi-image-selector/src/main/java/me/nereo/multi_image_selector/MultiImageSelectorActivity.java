@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 多图选择
@@ -35,6 +36,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     private ArrayList<String> resultList = new ArrayList<>();
     private Button mSubmitButton;
     private int mDefaultCount;
+    private boolean mIsShowingPager = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +139,25 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
             data.putStringArrayListExtra(EXTRA_RESULT, resultList);
             setResult(RESULT_OK, data);
             finish();
+        }
+    }
+
+    @Override
+    public void toggleActionBar(boolean visible) {
+        mIsShowingPager = !visible;
+        findViewById(R.id.action_bar).setVisibility(visible?View.VISIBLE:View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mIsShowingPager){
+            List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            Fragment fragment;
+            if(null != fragments && (null != (fragment = fragments.get(0))) && fragment instanceof MultiImageSelectorFragment){
+                ((MultiImageSelectorFragment)fragment).hideViewPager();
+            }
+        }else{
+            super.onBackPressed();
         }
     }
 }
