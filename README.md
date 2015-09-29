@@ -105,7 +105,9 @@ class CustomerActivity extends Activity implements MultiImageSelectorFragment.Ca
 -------------------
 
 ###Change Log
-
+* 2015-5-5
+    1. Added. Add image preview(selected preview and album preview).
+   
 * 2015-5-5
     1. Fixed. Can't display some images. (Issue by[sd6352051](https://github.com/sd6352051), [larry](https://github.com/18611480882))
     2. Fixed. `ListPopupWindow` can not fill parent
